@@ -63,12 +63,6 @@ HockeyTeam.prototype.checkSide = function(rink, pos){
     }
 }
 
-HockeyTeam.prototype.checkTeamSide = function(rink){
-    for(var role in this.players){
-        this.players[role].target = this.checkSide(rink, this.players[role].target);
-    }
-}
-
 HockeyTeam.prototype.flip = function(rink, pos){
     var flipped = pos;
     flipped.x = rink.width/2 + rink.width/2 - pos.x;
@@ -116,19 +110,16 @@ HockeyTeam.prototype.updateTarget = function(rink, puck) {
 HockeyTeam.prototype.setGoalieTarget = function(rink, puck){
     var p = this.players['g'];
     var defendPos = {x:rink.width/2, y:rink.bottom - rink.behindGoalHeight}
-    defendPos = this.checkSide(rink, defendPos);
-    currentPos = this.checkSide(rink, p.pos);
-    var puckPos = this.checkSide(rink, puck);
-    if(puckPos.y < rink.defenseBlueLine)
+    currentPos = p.pos;
+    if(puck.y < rink.defenseBlueLine)
         var nextPos = {x:rink.center.x, y:currentPos.y};
     else
-        var nextPos = {x:defendPos.x/2 + puckPos.x/2, y:currentPos.y};
+        var nextPos = {x:defendPos.x/2 + puck.x/2, y:currentPos.y};
     if(nextPos.x - defendPos.x > rink.goalWidth/2)
         nextPos.x = defendPos.x + rink.goalWidth/2;
     else if(defendPos.x - nextPos.x > rink.goalWidth/2)
         nextPos.x = defendPos.x - rink.goalWidth/2;
 
-    nextPos = this.checkSide(rink, nextPos);
     p.updateTarget(rink, nextPos);
 }
 
@@ -144,7 +135,7 @@ HockeyTeam.prototype.checkLines = function(rink, puck, pos){
 HockeyTeam.prototype.setTargetAttackLeft = function(rink, puck){
     var p = this.players['lf'];
     var newPos = {x:puck.x - p.size/2, y:puck.y + p.size * 2};
-    p.updateTarget(rink, this.checkSide(rink, newPos));
+    p.updateTarget(rink, newPos);
 
     p = this.players['rf'];
     newPos = {x: rink.width - this.players['lf'].target.x, y:this.players['lf'].target.y*3/4 + rink.behindGoalHeight*1/4}
@@ -174,29 +165,25 @@ HockeyTeam.prototype.setTargetAttackLeft = function(rink, puck){
 }
 
 HockeyTeam.prototype.setTargetCenter = function(rink, puck){
-    var puckPos = this.checkSide(rink, puck);
-    
     var p = this.players['c'];
-    var newPos = {x:puckPos.x, y:puckPos.y + p.size*2};
+    var newPos = {x:puck.x, y:puck.y + p.size*2};
     p.updateTarget(rink, newPos);
 
     p = this.players['lf'];
     newPos = {x:this.players['c'].target.x*1/4, y:this.players['c'].target.y - p.size*5};
-    p.updateTarget(rink, this.checkLines(rink, puckPos, newPos));
+    p.updateTarget(rink, this.checkLines(rink, puck, newPos));
 
     p = this.players['rf'];
-    vanewPos = {x:rink.width - this.players['c'].target.x/4, y:this.players['c'].target.y - p.size*5};
-    p.updateTarget(rink, this.checkLines(rink, puckPos, newPos));
+    newPos = {x:rink.width - this.players['c'].target.x/4, y:this.players['c'].target.y - p.size*5};
+    p.updateTarget(rink, this.checkLines(rink, puck, newPos));
 
     p = this.players['lb'];
     newPos = {x:this.players['c'].target.x/2, y:this.players['c'].target.y + p.size*7};
-    p.updateTarget(rink, this.checkLines(rink, puckPos, newPos));
+    p.updateTarget(rink, this.checkLines(rink, puck, newPos));
 
     p = this.players['rb'];
     newPos = {x:this.players['c'].target.x + (rink.width - this.players['c'].target.x)/2, y:this.players['c'].target.y + p.size*7};
-    p.updateTarget(rink, this.checkLines(rink, puckPos, newPos));
-
-    this.checkTeamSide(rink);
+    p.updateTarget(rink, this.checkLines(rink, puck, newPos));
 }
 
 HockeyTeam.prototype.setTargetDefendLeft = function(rink, puck){
@@ -210,6 +197,6 @@ HockeyTeam.prototype.setTargetAttackRight = function(rink, puck){
 
 HockeyTeam.prototype.setTargetDefendRight = function(rink, puck){
     var puckFlipped = this.flip(rink, {x: puck.x, y:puck.y});
-    this.setTargetdefendLeft(rink, puckFlipped);
+    this.setTargetDefendLeft(rink, puckFlipped);
     this.flipTeam(rink);
 }
