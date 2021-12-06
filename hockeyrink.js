@@ -95,16 +95,31 @@ HockeyRink.prototype.draw = function(ctx, w, h) {
 
         //bully centers
         ctx.beginPath();
-        ctx.arc(this.left + this.borderToBullyW, this.top + this.borderToBullyH, 2, 0, 2 * Math.PI);
+        ctx.arc(this.middle.x, this.middle.y, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.beginPath();
-        ctx.arc(this.right - this.borderToBullyW, this.top + this.borderToBullyH, 2, 0, 2 * Math.PI);
+        ctx.arc(this.left + this.borderToBullyW, this.top + this.borderToBullyH, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.beginPath();
-        ctx.arc(this.left + this.borderToBullyW, this.bottom - this.borderToBullyH, 2, 0, 2 * Math.PI);
+        ctx.arc(this.left + this.borderToBullyW, this.top + this.attackBlueLine + this.circleRadius/3, 4, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.beginPath();
-        ctx.arc(this.right - this.borderToBullyW, this.bottom - this.borderToBullyH, 2, 0, 2 * Math.PI);
+        ctx.arc(this.right - this.borderToBullyW, this.top + this.borderToBullyH, 4, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.right - this.borderToBullyW, this.top + this.attackBlueLine + this.circleRadius/3, 4, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.left + this.borderToBullyW, this.bottom - this.borderToBullyH, 4, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.left + this.borderToBullyW, this.bottom - this.attackBlueLine - this.circleRadius/3, 4, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.right - this.borderToBullyW, this.bottom - this.borderToBullyH, 4, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.right - this.borderToBullyW, this.bottom - this.attackBlueLine - this.circleRadius/3, 4, 0, 2 * Math.PI);
         ctx.stroke();
 
         //goals

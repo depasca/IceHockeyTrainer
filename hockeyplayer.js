@@ -8,40 +8,44 @@ function HockeyPlayer(rink, color1, color2, role, home) {
     this.home = home;
     this.size = rink.width/30;
     this.role = role;
+    this.pos = {};
+    this.target = {};
     switch(role){
       case 'c':
-        this.x = rink.width/2;
-        this.y = rink.heigth/2 + this.size * 2;
+        this.pos.x = rink.width/2;
+        this.pos.y = rink.heigth/2 + this.size * 2;
         break;
       case 'lf':
-        this.x = rink.width/2 - this.size * 8;
-        this.y = rink.heigth/2 + this.size * 2;
+        this.pos.x = rink.width/2 - this.size * 8;
+        this.pos.y = rink.heigth/2 + this.size * 2;
         break;
       case 'lb':
-        this.x = rink.width/2 - this.size * 4;
-        this.y = rink.heigth/2 + this.size * 8;
+        this.pos.x = rink.width/2 - this.size * 4;
+        this.pos.y = rink.heigth/2 + this.size * 8;
         break;
       case 'rf':
-        this.x = rink.width/2 + this.size * 8;
-        this.y = rink.heigth/2 + this.size * 2;
+        this.pos.x = rink.width/2 + this.size * 8;
+        this.pos.y = rink.heigth/2 + this.size * 2;
         break;
       case 'rb':
-        this.x = rink.width/2 + this.size * 4;
-        this.y = rink.heigth/2 + this.size * 8;
+        this.pos.x = rink.width/2 + this.size * 4;
+        this.pos.y = rink.heigth/2 + this.size * 8;
         break;
       case 'g':
-        this.x = rink.width/2;
-        this.y = rink.heigth - rink.behindGoalHeight - 1.1 * this.size;
+        this.pos.x = rink.width/2;
+        this.pos.y = rink.heigth - rink.behindGoalHeight - 1.1 * this.size;
         break;
     }
     if(!this.home){
-      this.x = rink.width/2 - (this.x - rink.width/2);
-      this.y = rink.heigth/2 - (this.y - rink.heigth/2);
+      this.pos.x = rink.width/2 - (this.pos.x - rink.width/2);
+      this.pos.y = rink.heigth/2 - (this.pos.y - rink.heigth/2);
     }
+    this.target.x = this.pos.x;
+    this.target.y = this.pos.y;
   }
   
 HockeyPlayer.prototype.draw = function(ctx, rink) {
-    pos = {x: rink.left + this.x, y: rink.top + this.y};
+    pos = {x: rink.left + this.pos.x, y: rink.top + this.pos.y};
     ctx.beginPath();
     ctx.fillStyle = this.color1;
     ctx.strokeStyle = this.color2;
@@ -51,31 +55,49 @@ HockeyPlayer.prototype.draw = function(ctx, rink) {
     ctx.stroke();
 }
 
-HockeyPlayer.prototype.updatePosition = function(rink, pos){
+HockeyPlayer.prototype.updateTarget = function(rink, newPos){
   //TODO check if out of rink
-  this.x = pos.x;
-  this.y = pos.y;
+  this.target.x = newPos.x;
+  this.target.y = newPos.y;
+  var deltaX = this.target.x - this.pos.x;
+  var deltaY = this.target.y - this.pos.y;
+  this.velX = Math.abs(deltaX) > this.size ? Math.sign(deltaX) * 1 : 0;
+  this.velY = Math.abs(deltaY) > this.size ? Math.sign(deltaY) * 1 : 0;
+  if(Math.abs(deltaX) > Math.abs(deltaY))
+    this.velY /= Math.abs(deltaX/deltaY);
+  else
+    this.velX /= Math.abs(deltaY/deltaX);
+  if(this.velX !=0 || this.velY != 0)
+    this.update(rink);
 }
 
-HockeyPlayer.prototype.update = function(rink) {
-    if ((this.x + this.size) >= rink.right) {
-      this.velX = -(this.velX);
+HockeyPlayer.prototype.update = function(rink, puck) {
+    if ((this.pos.x + this.size) >= rink.width) {
+      this.pos.x = rink.width - this.size;
+      this.velX = 0;
     }
   
-    if ((this.x - this.size) <= rink.left) {
-      this.velX = -(this.velX);
+    if ((this.pos.x - this.size) <= 0) {
+      this.pos.x = this.size;
+      this.velX = 0;
     }
   
-    if ((this.y + this.size) >= rink.bottom) {
-      this.velY = -(this.velY);
+    if ((this.pos.y + this.size) >= rink.heigth) {
+      this.pos.y = rink.heigth - this.size;
+      this.velY = 0;
     }
   
-    if ((this.y - this.size) <= rink.top) {
-      this.velY = -(this.velY);
+    if ((this.pos.y - this.size) <= 0) {
+      this.pos.y = this.size;
+      this.velY = 0;
     }
   
-    this.x += this.velX;
-    this.y += this.velY;
+    this.pos.x += this.velX;
+    this.pos.y += this.velY;
+    if(Math.abs(this.pos.x - this.target.x) < this.size)
+      this.velX = 0;
+    if(Math.abs(this.pos.y - this.target.y) < this.size)
+      this.velY = 0;
 }
 
 HockeyPlayer.prototype.collisionDetect = function(team) {
