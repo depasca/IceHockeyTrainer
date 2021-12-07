@@ -45,16 +45,58 @@ function drawWorld(){
     requestAnimationFrame(drawWorld);
   }
 
-function learnGoodPos(){}
+  function learnGoodPos(){
+    set = {'puck.x': puck.x, 'puck.y': puck.y};
+    for(role in opponentTeam.players){
+      set['opp ' + role+'.x'] = Math.floor(opponentTeam.players[role].pos.x);
+      set['opp ' + role+'.y'] = Math.floor(opponentTeam.players[role].pos.y);
+    }
+    for(role in ownTeam.players){
+      set['own ' + role+'.x'] = Math.floor(ownTeam.players[role].pos.x);
+      set['own ' + role+'.y'] = Math.floor(ownTeam.players[role].pos.y);
+    }
+    addToTrainingSet(set);
+  }
+  
+
+function showTrainingSet(){
+  alert(JSON.stringify(trainingSet));
+}
 
 function animate(){
 
 }
+var dragging = false;
+var selectedPlayer = null;
 
 canvas.addEventListener("click", function(event){
-  puck.updatePosition(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top});
-  ownTeam.updateTarget(rink, puck);
-  opponentTeam.updateTarget(rink, puck);
+  if(dragging)
+    dragging = false;
+  else{
+    puck.updatePosition(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top});
+    ownTeam.updateTarget(rink, puck);
+    opponentTeam.updateTarget(rink, puck);
+  }
 })
+
+canvas.addEventListener("mousedown", function(event){
+  selectedPlayer = ownTeam.select(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top});
+  if(selectedPlayer == null)
+    selectedPlayer = opponentTeam.select(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top});
+  if(selectedPlayer != null){
+    //player.color2="red";
+    dragging = true;
+  }
+  else
+    dragging = false;
+})
+
+canvas.addEventListener("mousemove", function(event){
+  if(dragging && (selectedPlayer != null))
+    selectedPlayer.updatePosition(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top})
+})
+
+
+
 resetWorld();
 loop();

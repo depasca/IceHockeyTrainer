@@ -65,14 +65,20 @@ HockeyPlayer.prototype.draw = function(ctx, rink) {
     ctx.stroke();
 }
 
+HockeyPlayer.prototype.updatePosition = function(rink, newPos){
+  newPos = this.checkSide(rink, newPos);
+  this.pos.x = newPos.x;
+  this.pos.y = newPos.y;
+}
+
 HockeyPlayer.prototype.updateTarget = function(rink, newPos){
   //TODO check if out of rink
   this.target.x = newPos.x;
   this.target.y = newPos.y;
   var deltaX = this.target.x - this.pos.x;
   var deltaY = this.target.y - this.pos.y;
-  this.velX = Math.abs(deltaX) > this.size/4 ? Math.sign(deltaX) * 1 : 0;
-  this.velY = Math.abs(deltaY) > this.size/4 ? Math.sign(deltaY) * 1 : 0;
+  this.velX = Math.abs(deltaX) > this.size/4 ? Math.sign(deltaX) * 5 : 0;
+  this.velY = Math.abs(deltaY) > this.size/4 ? Math.sign(deltaY) * 5 : 0;
   if(deltaX != 0 && deltaY != 0){
     if(Math.abs(deltaX) > Math.abs(deltaY))
       this.velY /= Math.abs(deltaX/deltaY);

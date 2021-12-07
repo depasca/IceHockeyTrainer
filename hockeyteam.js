@@ -200,3 +200,13 @@ HockeyTeam.prototype.setTargetDefendRight = function(rink, puck){
     this.setTargetDefendLeft(rink, puckFlipped);
     this.flipTeam(rink);
 }
+
+HockeyTeam.prototype.select = function(rink, pos){
+    pos = this.checkSide(rink, pos);
+    for(role in this.players){
+        if(Math.abs(this.players[role].pos.x - pos.x) < this.players[role].size && 
+            Math.abs(this.players[role].pos.y - pos.y) < this.players[role].size)
+        return this.players[role];
+    }
+    return null;
+}
