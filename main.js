@@ -1,10 +1,8 @@
 // setup canvas
-
-const canvas = document.querySelector('canvas');
+const canvas = document.getElementById('icehockeyrink');
 const ctx = canvas.getContext('2d');
-
 const width = canvas.width = Math.min(500, window.innerWidth);
-const height = canvas.height = window.innerHeight;
+const height = canvas.height = Math.min(1000,window.innerHeight);
 
 // function to generate random number
 
@@ -22,7 +20,7 @@ var ownTeam;
 var opponentTeam;
 
 function resetWorld(){
-  rink = new HockeyRink(50, 50, width - 100, height - 100); 
+  rink = new HockeyRink(0, 0, width - 0, height - 0); 
   puck = new Puck(rink);
   ownTeam = new HockeyTeam(rink, 'orange', 'blue', true);
   opponentTeam = new HockeyTeam(rink, 'lightblue', 'green', false);
@@ -58,14 +56,21 @@ function drawWorld(){
     addToTrainingSet(set);
   }
   
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+}
 
 function showTrainingSet(){
-  alert(JSON.stringify(trainingSet));
+  var text = document.getElementById('trainingset');
+  text.innerHTML = JSON.stringify(trainingSet);
+  download(JSON.stringify(trainingSet), 'trainingset.txt', 'text/plain');
 }
 
-function animate(){
 
-}
 var dragging = false;
 var selectedPlayer = null;
 

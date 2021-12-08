@@ -4,28 +4,30 @@
       <meta charset="utf-8">
       <title>Ice Hockey Trainer</title>
       <link rel="stylesheet" href="style.css">
-   </head>
-
+      <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+      <style>
+        canvas { border: 1px solid black; }
+      </style>
+</head>
    <body>
       <h1>Ice Hockey Training</h1>
-   <!-- <object id="hockeyrink" data="./img/NHL_Hockey_Rink.svg" type="image/svg+xml"></object> -->
-   
-<div background = "grey">
-   <canvas>
-      <!-- <script src = "./img/NHL_Hockey_Rink.js"></script> -->
-   </canvas>
-</div>
-   <script src="hockeyrink.js"></script>
-   <script src="puck.js"></script>
-   <script src="hockeyplayer.js"></script>
-   <script src="hockeyteam.js"></script>
-   <script src="learn.js"></script>
-   <script src="main.js"></script>
-
-<div>
-   <button onclick="resetWorld()">Reset</button>
-   <button onclick="learnGoodPos()">Learn</button>
-   <button onclick="showTrainingSet()">ShowTS</button>
-</div>
-  </body>
+      <div>
+         <button onclick="resetWorld()">Reset</button>
+         <button onclick="learnGoodPos()">Learn</button>
+         <button onclick="showTrainingSet()">ShowTS</button>
+      </div>
+      <br>
+      <div>
+         <canvas id="icehockeyrink" width="500", height="1000"></canvas>
+         <script src="hockeyrink.js"></script>
+         <script src="puck.js"></script>
+         <script src="hockeyplayer.js"></script>
+         <script src="hockeyteam.js"></script>
+         <script src="learn.js"></script>
+         <script src="main.js"></script>
+      </div>
+      <div style="height: 500;">
+         <textarea id="trainingset" style="width: 100%; height: 500;"></textarea>
+      </div>
+   </body>
 </html>
