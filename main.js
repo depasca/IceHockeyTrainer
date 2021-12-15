@@ -64,12 +64,15 @@ function download(content, fileName, contentType) {
     a.click();
 }
 
-function showTrainingSet(){
+function downloadTrainingSet(){
   var text = document.getElementById('trainingset');
   text.innerHTML = JSON.stringify(trainingSet);
-  download(JSON.stringify(trainingSet), 'trainingset.txt', 'text/plain');
+  download(JSON.stringify(trainingSet), 'trainingset.json', 'text/plain');
 }
 
+function train(){
+  trainWithPuck(rink);
+}
 
 var dragging = false;
 var selectedPlayer = null;
@@ -78,6 +81,7 @@ canvas.addEventListener("click", function(event){
   if(dragging)
     dragging = false;
   else{
+    console.log([event.pageX, event.pageY]);
     puck.updatePosition(rink, {x:event.pageX - rink.left, y:event.pageY - rink.top});
     ownTeam.updateTarget(rink, puck);
     opponentTeam.updateTarget(rink, puck);

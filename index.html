@@ -12,12 +12,6 @@
    <body>
       <h1>Ice Hockey Training</h1>
       <div>
-         <button onclick="resetWorld()">Reset</button>
-         <button onclick="learnGoodPos()">Learn</button>
-         <button onclick="showTrainingSet()">ShowTS</button>
-      </div>
-      <br>
-      <div>
          <canvas id="icehockeyrink" width="500", height="1000"></canvas>
          <script src="hockeyrink.js"></script>
          <script src="puck.js"></script>
@@ -25,6 +19,13 @@
          <script src="hockeyteam.js"></script>
          <script src="learn.js"></script>
          <script src="main.js"></script>
+      </div>
+      <br>
+      <div>
+         <button onclick="resetWorld()">Reset</button>
+         <button onclick="learnGoodPos()">Learn</button>
+         <button onclick="downloadTrainingSet()">ShowTS</button>
+         <button onclick="train()">Train</button>
       </div>
       <div style="height: 500;">
          <textarea id="trainingset" style="width: 100%; height: 500;"></textarea>
